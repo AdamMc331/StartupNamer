@@ -8,6 +8,7 @@ class RandomWords extends StatefulWidget {
 
 class RandomWordsState extends State<RandomWords> {
   final _suggestions = <WordPair>[];
+  final _saved = new Set<WordPair>();
   final _biggerFont = const TextStyle(fontSize: 18.0);
 
   /// Builds a list of suggested word pairings in a ListView.
@@ -39,11 +40,28 @@ class RandomWordsState extends State<RandomWords> {
 
   /// Builds a ListTile for an individual WordPair row.
   Widget _buildRow(WordPair pair) {
+    final alreadySaved = _saved.contains(pair);
+    final icon = alreadySaved ? Icons.favorite : Icons.favorite_border;
+    final iconColor = alreadySaved ? Colors.red : null;
+
     return new ListTile(
       title: new Text(
         pair.asPascalCase,
         style: _biggerFont,
       ),
+      trailing: new Icon(
+        icon,
+        color: iconColor,
+      ),
+      onTap: () {
+        setState(() {
+          if (alreadySaved) {
+            _saved.remove(pair);
+          } else {
+            _saved.add(pair);
+          }
+        });
+      },
     );
   }
 
